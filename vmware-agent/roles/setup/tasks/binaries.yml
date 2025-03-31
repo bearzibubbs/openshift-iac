@@ -8,15 +8,6 @@
   ansible.builtin.set_fact:
     __openshift_client: "{{ setup_clients_url }}/{{ __product_release_version }}/openshift-client-{{ __family }}.tar.gz"
     __openshift_install: "{{ setup_clients_url }}/{{ __product_release_version }}/openshift-install-{{ __family }}.tar.gz"
-
-- name: Binaries | Add a path to system-wide $PATH.
-  ansible.builtin.copy:
-    dest: /etc/profile.d/custom-path.sh
-    content: 'PATH=$PATH:{{ setup_binaries_dir }}/bin'
-    mode: "0644"
-
-- name: Binaries | check PATH
-  ansible.builtin.command: "which oc"
     
 
 - name: Binaries | Clean up existing bin and downloads folders
@@ -35,6 +26,16 @@
     - "bin"
     - "downloads"
 
+- name: Binaries | Add a path to system-wide $PATH.
+  ansible.builtin.copy:
+    dest: /etc/profile.d/custom-path.sh
+    content: 'PATH=$PATH:{{ setup_binaries_dir }}/bin'
+    mode: "0644"
+
+- name: Binaries | check PATH
+  ansible.builtin.debug: 
+    msg: "echo $PATH"
+
 # suggest changing this to an oc command and get whatever version of openshift you're looking for
 - name: Binaries | Download the openshift_client binary
   ansible.builtin.get_url:
@@ -48,7 +49,7 @@
   ansible.builtin.unarchive:
     remote_src: true
     src: "{{ setup_binaries_dir }}/downloads/openshift_client.tar.gz"
-    dest: "{{ setup_binaries_dir }}/bin"
+    dest: "/usr/bin"
     mode: '0775'
   when: __openshift_oc_download is changed
 
