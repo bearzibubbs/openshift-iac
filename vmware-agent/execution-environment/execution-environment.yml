@@ -2,3 +2,7 @@
 version: 3
 dependencies:
   galaxy: requirements.yml
+  system: bindep.txt
+images:
+  base_image:
+    name: ghcr.io/ansible-community/community-ee-minimal:latest

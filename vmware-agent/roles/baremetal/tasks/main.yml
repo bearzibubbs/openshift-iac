@@ -14,8 +14,8 @@
     dest: "{{ baremetal_cluster_home_dir }}/install-config.yaml"
     mode: "0644"
   vars:
-    __master_nodes_len: "{{ openshift_install_nodes | machacekondra.openshift_install.master_nodes_len }}"
-    __worker_nodes_len: "{{ openshift_install_nodes | machacekondra.openshift_install.worker_nodes_len }}"
+    __master_nodes_len: 3 #"{{ openshift_install_nodes | machacekondra.openshift_install.master_nodes_len }}"
+    __worker_nodes_len: 0 #"{{ openshift_install_nodes | machacekondra.openshift_install.worker_nodes_len }}"
 
 - name: Baremetal | Generate agent-config.yaml
   ansible.builtin.template:

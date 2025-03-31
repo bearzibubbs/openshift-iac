@@ -1,12 +1,23 @@
 - name: Binaries | Set product version
   ansible.builtin.set_fact:
-    __product_release_version: "{{ setup_cluster_version | machacekondra.openshift_install.product_release_version }}"
+    __product_release_version: "{{ setup_cluster_version }}"
+    # | machacekondra.openshift_install.product_release_version }}"
     __family: "{{ 'mac' if ansible_os_family == 'Darwin' else 'linux' }}"
 
 - name: Binaries| Set the download facts openshift binaries
   ansible.builtin.set_fact:
     __openshift_client: "{{ setup_clients_url }}/{{ __product_release_version }}/openshift-client-{{ __family }}.tar.gz"
     __openshift_install: "{{ setup_clients_url }}/{{ __product_release_version }}/openshift-install-{{ __family }}.tar.gz"
+
+- name: Binaries | Add a path to system-wide $PATH.
+  ansible.builtin.copy:
+    dest: /etc/profile.d/custom-path.sh
+    content: 'PATH=$PATH:{{ setup_binaries_dir }}/bin'
+    mode: "0644"
+
+- name: Binaries | check PATH
+  ansible.builtin.command: "which oc"
+    
 
 - name: Binaries | Clean up existing bin and downloads folders
   ansible.builtin.file:
@@ -24,6 +35,7 @@
     - "bin"
     - "downloads"
 
+# suggest changing this to an oc command and get whatever version of openshift you're looking for
 - name: Binaries | Download the openshift_client binary
   ansible.builtin.get_url:
     mode: "0644"

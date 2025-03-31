@@ -1,0 +1,71 @@
+# This inventory will run on local machine and following will be configured:
+# Private registry 
+all:
+  hosts:
+    localhost:
+      ansible_connection: local
+  children:
+    localhost:
+      hosts:
+        localhost:
+      vars:
+        # Registry
+        openshift_install_registry: false
+        # openshift_install_ocp_release: 4.15.0-ec.2-x86_64 
+        # openshift_install_registry_host: fedora-jumpbox.flightpath.internal
+
+        # Basic vars
+        openshift_install_base_domain: nekohouse.ca
+        openshift_install_cluster_name: agent-static
+
+        # # Vcenter infra vars
+        # openshift_install_vcenter_datacenter: DC-Practice-Lab
+        # openshift_install_vcenter_cluster: Practice-Lab-Cluster
+        # openshift_install_vcenter_datastore: pool0-ceph-storage
+        # openshift_install_vcenter_network: "vlan-314 - DPortGroup"
+        # openshift_install_vcenter_folder: "/DC-Practice-Lab/vm/omachace"
+
+        # Virtual IP
+        openshift_install_api_vip: 10.10.30.5
+        openshift_install_ingress_vip: 10.10.30.6
+
+        # # Hashi vault
+        # openshift_install_vault_secret_dns: flightpath/data/dns
+        # openshift_install_vault_secret_lb: flightpath/data/lb
+        # openshift_install_vault_secret_vsphere: flightpath/data/vsphere
+        # openshift_install_vault_url: https://10.1.196.198:8200/
+        # Token is stored in ansible vault
+        # openshift_install_vault_token: 
+
+        # Nodes spec
+        openshift_install_dns_servers:
+          - "10.10.60.18"
+        openshift_install_default_route: "10.10.30.1"
+        openshift_install_network: "10.10.30.0/24"
+        openshift_install_dhcp: false
+        openshift_install_nodes:
+          - name: 'vm0' 
+            bmc_address: redfish-virtualmedia+http://10.10.100.14:8000/redfish/v1/Systems/00000000-0000-0000-0003-000000000000
+            bmc_username: peter
+            bmc_password: password
+            ipaddr: 10.10.30.15
+            macaddr: 00:50:56:95:50:00
+          - name: 'vm1'
+            bmc_address: redfish-virtualmedia+http://10.10.100.14:8000/redfish/v1/Systems/00000000-0000-0000-0003-000000000001
+            bmc_username: peter
+            bmc_password: password
+            ipaddr: 10.10.30.16
+            macaddr: 00:50:56:95:50:01
+          - name: 'vm2'
+            bmc_address: redfish-virtualmedia+http://10.10.100.14:8000/redfish/v1/Systems/00000000-0000-0000-0003-000000000002
+            bmc_username: peter
+            bmc_password: password
+            ipaddr: 10.10.30.17
+            macaddr: 00:50:56:95:50:02
+        # Openshift values:
+        # openshift_install_dns_primary_grid: "infoblox-1.localdomain"
+        openshift_install_ssh_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDtK+1/pa6fWID/IfsPfMxy+xWZfqmegz52jfrtqhc4VQ0cr7RLr3mxcuAVu2p7DcmnzuGwDScqFGaIpH67cEpGxxypLIjFEYfVBCm3iQXwMRIFgAfZid6l1LpQ/3JaLD5tyOAhUA94qqB3W6o3HZAt2z4tjaFlNDgEAuYJUiGx86ZZKnQMBN9hS7lFbiBQeTjiQAz2ODhYqsMzmwTqFyTjuhD0jKh1iDeDa4oiGZslOifTRrQS5lrC8Nh15nmSLA77m7NxXnQin3yc9Ws7JoDonE3FGTApjHejRwyZoXe3sliH0gjYHrkXJY0K/1GPTmVX68qDe6NKrwp5pjSzBLuR"
+        openshift_install_cluster_version: latest
+        openshift_install_wait_for_install: true
+        openshift_install_pull_secret: > 
+          {"auths":{"quay.nekohouse.ca:8443":{"auth":"aW5pdDpzNzNCd1AxVU9SRDVnOVNtOEpjNE02bEhocEMyMEVhZA==","email":""},"cloud.openshift.com":{"auth":"b3BlbnNoaWZ0LXJlbGVhc2UtZGV2K29jbV9hY2Nlc3NfMDMyNTkwZDNkNGE5NGUxOTg1ZTZmZGY4Y2ViOTQ1ODI6UVpLVUs4UUlBMUtENUZRWjQ4WEJHRkVJSVYyNlJSMjRRSkhWMVBOWllXREg3WFJRTUczWFlDM1NPRVIxRzVQUA==","email":"plegg@redhat.com"},"quay.io":{"auth":"b3BlbnNoaWZ0LXJlbGVhc2UtZGV2K29jbV9hY2Nlc3NfMDMyNTkwZDNkNGE5NGUxOTg1ZTZmZGY4Y2ViOTQ1ODI6UVpLVUs4UUlBMUtENUZRWjQ4WEJHRkVJSVYyNlJSMjRRSkhWMVBOWllXREg3WFJRTUczWFlDM1NPRVIxRzVQUA==","email":"plegg@redhat.com"},"registry.connect.redhat.com":{"auth":"fHVoYy1wb29sLWQ4ODA3ZGMxLWQ4MWQtNDAwZC1hZTNlLTMyN2I3NmQ4NTQ4NzpleUpoYkdjaU9pSlNVelV4TWlKOS5leUp6ZFdJaU9pSmtaREJqWXpFMU5URTBNV1EwT0dKa09HVXhPRFV5T0dZMVlqWm1Oelk1WmlKOS5NaUJIbUs1WVN2UnRqRkx0UjZaVlpnVDlWMkMxRm9DREQ0RS1YNEQ4NEtRLUZEYzlFei1WMFpNQXJTY3dDSmlqbkhsZHJtX1dJU00zSGdJeG5CZGxMTGoxNlNjS3VDNzdMNTFId3Q0X19Db29idGt0cHhJRTM2UEprVDBjLXpiWGd0T1h3aXVpQVU4SDVTYmtNZm9YbGo0Qm1MZ0Nqakh2N1NYVWJ2d3lyRFMtcmFrck9lSjVXSFFBcTRBODUzcnBEUWhPWllIRFZKQXRmNFBzRVZFYW5EYWNUUEp4Qm9lSHJTQjM1OGNrOGRHY3dSaGtWNHBLdGw1TGRRWWFBMXU4bFBXVHA3Sk1LLUpMZTY5RWs2YTVPbFBTenAweXBiUzE3TG0tSVhVSWtYU3lDTDVfa1o2VG1XUi1YeU12ZDBLWXVOTTJaTlQ1SkNZdTF1QVNWMmwzN185Nnk0dWFMbW1mb3pQdmNXWkJURkdaU2FJTU1ZeWw0Q0lpb2NQNF9tMUxQbTR2cGJ5Z1JXZV9jWDI3QkhGZUY5Z1hZRzExYVM1S0plNU9jS0pFLVlCRnAtb0FWM3hjMmJ0YWFmTkpaYWJYOFRQS043MDRIYWl4QUFPVjk2UjlxTDItck1ZSlFnWnhQTEZIT2lfRWZ5TW1reWRzUlljQ2g2QmpCOGhlSDlsRDNaSTRVWW1BRWo3cFJKdmIyX1RDNU4xY3FxZEF2YVNmbU5jMFJEX3ktRGd2S1daUXFIb2NESzdoQk9ZV05zeVFoczBuZ1NpY3kwcmFVX2FOdERVWWJBZ1IwTDNzcERrQTBpVzA1YkNHUE9zUkZLRzBlREhBd0VYTXFpUjNMSjZraHhwWkVFeUxHX09pMjZCUHhXTENiekZMR0xGX2pkdE1ydWxjX3h5bU9lUQ==","email":"plegg@redhat.com"},"registry.redhat.io":{"auth":"fHVoYy1wb29sLWQ4ODA3ZGMxLWQ4MWQtNDAwZC1hZTNlLTMyN2I3NmQ4NTQ4NzpleUpoYkdjaU9pSlNVelV4TWlKOS5leUp6ZFdJaU9pSmtaREJqWXpFMU5URTBNV1EwT0dKa09HVXhPRFV5T0dZMVlqWm1Oelk1WmlKOS5NaUJIbUs1WVN2UnRqRkx0UjZaVlpnVDlWMkMxRm9DREQ0RS1YNEQ4NEtRLUZEYzlFei1WMFpNQXJTY3dDSmlqbkhsZHJtX1dJU00zSGdJeG5CZGxMTGoxNlNjS3VDNzdMNTFId3Q0X19Db29idGt0cHhJRTM2UEprVDBjLXpiWGd0T1h3aXVpQVU4SDVTYmtNZm9YbGo0Qm1MZ0Nqakh2N1NYVWJ2d3lyRFMtcmFrck9lSjVXSFFBcTRBODUzcnBEUWhPWllIRFZKQXRmNFBzRVZFYW5EYWNUUEp4Qm9lSHJTQjM1OGNrOGRHY3dSaGtWNHBLdGw1TGRRWWFBMXU4bFBXVHA3Sk1LLUpMZTY5RWs2YTVPbFBTenAweXBiUzE3TG0tSVhVSWtYU3lDTDVfa1o2VG1XUi1YeU12ZDBLWXVOTTJaTlQ1SkNZdTF1QVNWMmwzN185Nnk0dWFMbW1mb3pQdmNXWkJURkdaU2FJTU1ZeWw0Q0lpb2NQNF9tMUxQbTR2cGJ5Z1JXZV9jWDI3QkhGZUY5Z1hZRzExYVM1S0plNU9jS0pFLVlCRnAtb0FWM3hjMmJ0YWFmTkpaYWJYOFRQS043MDRIYWl4QUFPVjk2UjlxTDItck1ZSlFnWnhQTEZIT2lfRWZ5TW1reWRzUlljQ2g2QmpCOGhlSDlsRDNaSTRVWW1BRWo3cFJKdmIyX1RDNU4xY3FxZEF2YVNmbU5jMFJEX3ktRGd2S1daUXFIb2NESzdoQk9ZV05zeVFoczBuZ1NpY3kwcmFVX2FOdERVWWJBZ1IwTDNzcERrQTBpVzA1YkNHUE9zUkZLRzBlREhBd0VYTXFpUjNMSjZraHhwWkVFeUxHX09pMjZCUHhXTENiekZMR0xGX2pkdE1ydWxjX3h5bU9lUQ==","email":"plegg@redhat.com"}}}
